@@ -1,0 +1,184 @@
+<?php
+
+  use Drupal\comment\CommentInterface;
+  use Drupal\comment_on_top_by_likes\Controller\CommentOnTopByLikesController;
+
+  /**
+   * Implements hook_schema().
+   * Creating db table comment__stick_on_top_by_likes with nid and sticked_on_top_by_likes columns
+   */
+  function comment_on_top_by_likes_schema() {
+    $schema = [];
+
+    $schema['comment__stick_on_top_by_likes'] = [
+      'description' => 'Stores sticked_on_top_by_likes status for each node.',
+      'fields' => [
+        'nid' => [
+          'type' => 'int',
+          'not null' => TRUE,
+          'description' => 'The node ID.',
+        ],
+        'type' => [
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => TRUE,
+          'description' => 'The type of the comment.',
+        ],
+        'sticked_on_top_by_likes' => [
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+          'default' => 0,
+          'description' => 'Flag for sticking comment on top by likes (0 or 1).',
+        ],
+      ],
+      'primary key' => ['nid'],
+    ];
+
+    return $schema;
+  }
+
+  /**
+   * Implements hook_install().
+   * Copy all nids and types from node_field_data and assign 0 to column sticked_on_top_by_likes
+   */
+  function comment_on_top_by_likes_install() {
+    $nodes = \Drupal::database()
+      ->select('node_field_data', 'n')
+      ->fields('n', ['nid', 'type'])
+      ->execute()
+      ->fetchAllKeyed();
+
+    // Using comment_on_top_by_likes.node service to assign 0 to column sticked_on_top_by_likes
+    $commentOnTopService = \Drupal::service('comment_on_top_by_likes.node');
+
+    foreach ($nodes as $nid => $type) {
+      $commentOnTopService->notStickOnTopByLikes($nid, $type);
+    }
+  }
+
+
+  /**
+   * Implements hook_form_alter().
+   * Inserting checkbox Stick on top by likes in node create form
+   */
+  function comment_on_top_by_likes_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+    $current_route = \Drupal::routeMatch()->getRouteName();
+      $node = \Drupal::routeMatch()->getParameter('node');
+    $nid = isset($node) ? $node->id() : 0;
+
+    $commentOnTopService = \Drupal::service('comment_on_top_by_likes.node');
+
+    $chckboxDefaultValue = $commentOnTopService->getStickedOnTopByLikes($nid) !== NULL
+      ? $commentOnTopService->getStickedOnTopByLikes($nid) : 0;
+
+    //Selecting content types which have comments
+    if (($current_route === 'node.add' || $current_route === 'entity.node.edit_form')
+      && array_key_exists('comment', $form)) {
+      $form['comment']['widget'][0]['stick_on_top_by_likes'] = [
+        '#type' => 'checkbox',
+        '#title' => t('Stick on top by likes'),
+        '#default_value' => $chckboxDefaultValue,
+        '#description' => t('Check this if you want to stick on top most liked comment in this node.'),
+      ];
+      $form['actions']['submit']['#submit'][] = 'comment_on_top_by_likes_submit';
+    }
+  }
+
+
+  /**
+   * Form submission handler for stick_on_top_by_likes form element on the node form
+   *
+   * @see comment_on_top_by_likes_form_alter()
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   */
+  function comment_on_top_by_likes_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+    // Get the node ID from the form state.
+    $nid = $form_state->getFormObject()->getEntity()->id();
+    $type = $form_state->getFormObject()->getEntity()->getType();
+
+    // Get value of the checkbox.
+    $stick_on_top_by_likes = $form_state->getValue(['comment', 0, 'stick_on_top_by_likes']);
+    $commentOnTopByLikesService = \Drupal::service('comment_on_top_by_likes.node');
+
+    // Check if the record exists in the database.
+    $record_exists = $commentOnTopByLikesService->getStickedOnTopByLikes($nid);
+
+    // If record doesn't exist, create a new one.
+    if ($record_exists === false) {
+      $commentOnTopByLikesService->createStickedOnTopByLikesRecord($nid, $stick_on_top_by_likes, $type);
+    } else {
+      // If record exists, update it.
+      $commentOnTopByLikesService->updateStickOnTopByLikes($nid, $stick_on_top_by_likes);
+    }
+
+    // Return default Drupal comment order if stick_on_top_by_likes is not checked
+    if ($stick_on_top_by_likes === 0) {
+      $commentOnTopService = \Drupal::service('comment_on_top.service');
+      return $commentOnTopService->changeAllLastCommentsToNull($nid);
+    }
+  }
+
+
+  /**
+   * Implements hook_comment_links_alter().
+   * Remove stick_on_top and remove_from_top buttons, if stick_on_top_by_likes is checked
+   */
+  function comment_on_top_by_likes_comment_links_alter(array &$links, CommentInterface $entity, array &$context)
+  {
+    //Get node nid
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $nid = isset($node) ? $node->id() : 0;
+
+    $commentOnTopService = \Drupal::service('comment_on_top_by_likes.node');
+
+    // If nid has checked stick_on_top_by_likes, remove those two buttons
+    if ($commentOnTopService->getStickedOnTopByLikes($nid) == 1) {
+      if (array_key_exists('comment_on_top_add', $links)) {
+        unset($links['comment_on_top_add']);
+      }
+      if (array_key_exists('comment_on_top_remove', $links)) {
+        unset($links['comment_on_top_remove']);
+      }
+    }
+  }
+
+
+  /**
+   * Implements hook_preprocess().
+   * Invokes stickCommentOnTopByLikes() method fom CommentOnTopByLikesController
+   */
+  function comment_on_top_by_likes_preprocess(&$variables, $hook)
+  {
+    $route_match = \Drupal::service('current_route_match')->getRouteName();
+
+    if ($route_match === 'entity.node.canonical' && $hook === 'node') {
+      $commentOnTopService = \Drupal::service('comment_on_top_by_likes.node');
+
+      $nid = $variables['node']->id();
+
+      // If nid has checked stick_on_top_by_likes, invoke stickCommentOnTopByLikes() method
+      if ($commentOnTopService->getStickedOnTopByLikes($nid) == 1) {
+        $controller = \Drupal::classResolver(CommentOnTopByLikesController::class);
+        return $controller->stickCommentOnTopByLikes();
+      }
+    }
+  }
+
+
+  /**
+   * Implements hook_help().
+   */
+  function comment_on_top_by_likes_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+    switch ($route_name) {
+      case 'help.page.comment_on_top_by_likes':
+        $output = '';
+
+        $output .= '<p>' . t('All explanation is in  <a href="/admin/help/comment_on_top" >Comment on top help</a>') . '</p>';
+        return $output;
+
+      default:
+    }
+  }

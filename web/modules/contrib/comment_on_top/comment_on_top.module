@@ -1,0 +1,326 @@
+<?php
+
+  use Drupal\comment\CommentInterface;
+  use Drupal\Core\Url;
+  use Drupal\views\ViewExecutable;
+  use Drupal\field\Entity\FieldStorageConfig;
+  use Drupal\views\Views;
+
+  /**
+ * @file
+ * Primary module hooks for Comment on top module.
+ */
+
+  /**
+   * Implements hook_comment_links_alter().
+   * Implement comment links "Stick on top" and "Remove from top"
+   */
+  function comment_on_top_comment_links_alter(array &$links, CommentInterface $entity, array &$context) {
+
+    //Checking is there any comment in node Sticked on top
+    $node_id = \Drupal::routeMatch()->getRawParameter('node');
+
+    //Making array of all Sticked on top values
+    $view = Views::getView('comments_with_one_sticked_on_top');
+    if (is_object($view)) {
+      $view->setArguments([$node_id]);
+      $view->setDisplay('bcsot');
+      $view->preExecute();
+      $view->execute();
+      $content = $view->buildRenderable('bcsot', [$node_id]);
+    }
+    $commentsArray = $content['#view']->result;
+    $commentsArrayStickedOnTop = [];
+    foreach ($commentsArray as $commentFromArray) {
+      $stickedOnTopValue = $commentFromArray->comment__field_stick_comment_on_top_boole_field_stick_commen;
+      $commentsArrayStickedOnTop[] = $stickedOnTopValue;
+    }
+
+    $stickedOnTop = \Drupal::entityTypeManager()->getStorage("comment")
+      ->load($entity->id())->field_stick_comment_on_top_boole->value;
+    $thread = \Drupal::entityTypeManager()->getStorage("comment")
+      ->load($entity->id())->thread->value;
+
+    if (\Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+      if (\Drupal::currentUser()->hasPermission('administer comment on top')) {
+        if (!$entity->hasParentComment()) {
+
+          //If one comment is Sticked on top display button Stick on top to every comment except One which is sticked...
+          if ((in_array('1', $commentsArrayStickedOnTop) && $stickedOnTop !== '1') ||
+
+            //...or if neither one comment is Sticked on top  display button Sticked on top to every comment...
+            //...except default drupal first comment
+            ((!in_array('1', $commentsArrayStickedOnTop)) && ($thread !== "01/"))) {
+            $links['comment_on_top_add'] = [
+              '#links' => [
+                'comment-report' => [
+                  'title' => t('Stick on top'),
+                  'url' => Url::fromRoute('comment_on_top.add', [
+                    'comment_id' => $entity->id(),
+                    'node_id' => $node_id
+                  ]),
+                ],
+              ],
+            ];
+          }
+
+          // If comment is sticked on top display button Remove from top
+          if ($stickedOnTop === '1' && ($thread !== "01/")) {
+            $links['comment_on_top_remove'] = [
+              '#links' => [
+                'comment-report' => [
+                  'title' => t('Remove from top'),
+                  'url' => Url::fromRoute('comment_on_top.remove',
+                    [
+                      'comment_id' => $entity->id(),
+                      'node_id' => $node_id
+                    ]),
+                ],
+              ],
+            ];
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_views_pre_render().
+   * Grouping replies/threads with main comment, if it's sticked on top
+   * Affects view comments_with_one_sticked_on_top and its block
+   */
+  function comment_on_top_views_pre_render(ViewExecutable $view) {
+    if ($routeName = \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+      //Get all comments in node
+      $comments = $view->result;
+      //Get comments threads, and with threads replace default array keys from $view->result
+      $commentThreadsAsKeys = [];
+      foreach ($comments as $key => $comment) {
+        $threadKey = rtrim($comment->_entity->getThread(), '/');
+        $commentThreadsAsKeys[$threadKey] = $comment;
+      }
+
+      $view->result = $commentThreadsAsKeys;
+
+      $commentKeys = array_keys($commentThreadsAsKeys);
+
+      //Getting sticked comment
+      $stickedCommentThread = null;
+      foreach ($view->result as $key => $comment) {
+        $stickedComment = isset($comment->comment__field_stick_comment_on_top_boole_field_stick_commen) ?
+          $comment->comment__field_stick_comment_on_top_boole_field_stick_commen : null;
+        //If comment is sticked on top
+        if ($stickedComment === '1') {
+          //then define $stickedCommentThread as first digits thread. That is order number of comment like 04 for fourth comment.
+          $stickedCommentThread = array_key_first($view->result);
+        }
+      }
+
+      //if NOT $stickedCommentThread = null, If user clicked on button "Stick on top"
+      $commentThread = null;
+      if ($stickedCommentThread !== null) {
+        // Sort $commentKeys with first comment sticked on top with its replies
+        usort($commentKeys, function ($a, $b) use ($stickedCommentThread) {
+          if (strpos($a, $stickedCommentThread) === 0 && strpos($b, $stickedCommentThread) !== 0) {
+            return -1;
+          } elseif (strpos($a, $stickedCommentThread) !== 0 && strpos($b, $stickedCommentThread) === 0) {
+            return 1;
+          }
+          return strcmp($a, $b);
+        });
+
+        // Create a new array with $commentKeys as keys and corresponding $view->result values
+        $commentOrderWithStickedOnTopAndItsReplies = [];
+        foreach ($commentKeys as $key) {
+          if (isset($view->result[$key])) {
+            $commentOrderWithStickedOnTopAndItsReplies[$key] = $view->result[$key];
+          }
+        }
+        //Comment on top with its replies is sticked on top
+        $view->result = $commentOrderWithStickedOnTopAndItsReplies;
+      }
+      else {
+          //Make default comments order based on database
+          $defaultCommentOrder = [];
+          foreach (array_keys($commentThreadsAsKeys) as $threadValue) {
+            if (isset($view->result[$threadValue])) {
+              $defaultCommentOrder[$threadValue] = $view->result[$threadValue];
+            }
+          }
+        // Returning default comment order
+        uksort($defaultCommentOrder, function($a, $b) {
+          $aParts = explode('.', $a);
+          $bParts = explode('.', $b);
+
+          foreach ($aParts as $key => $value) {
+            if (!isset($bParts[$key])) {
+              return 1;
+            }
+
+            if ($value != $bParts[$key]) {
+              return ($value > $bParts[$key]) ? 1 : -1;
+            }
+          }
+
+          return 0;
+        });
+        // Default comment order
+        $view->result = $defaultCommentOrder;
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for node templates.
+   * Displays comment form on content types which have comment field
+   */
+  function comment_on_top_preprocess_node(&$variables) {
+    //Get all content types which have node.comment field
+    $FieldStorageConfig = FieldStorageConfig::load('node.comment');
+    $ContentTypesHaveCommentField = $FieldStorageConfig ? $FieldStorageConfig->getBundles() : null;
+
+    //Status of comment settings. '2' is open for commenting
+    $statusOfCommentSettings = isset($variables['elements']['#node']->comment->status);
+
+    foreach ($ContentTypesHaveCommentField as $hasCommentField) {
+      if ($variables['node']->getType() == $hasCommentField &&
+        ($statusOfCommentSettings === true || '2') &&
+        \Drupal::routeMatch()->getRouteName() === 'entity.node.canonical') {
+        $nid = $variables['node']->id();
+
+        $commentedEntityTypeId = 'node';
+        $commentedEntityId = $nid;
+        $fieldName = 'comment';
+        $commentTypeId = 'comment';
+
+        $commentForm = comment_on_top_generate_comment_form($commentedEntityTypeId,
+          $commentedEntityId, $fieldName, $commentTypeId);
+
+        if (\Drupal::currentUser()->hasPermission('post comments')) {
+
+          $variables['content']['comment_form'] = $commentForm;
+          $variables['content']['comment_form']['#weight'] = 100;
+        }
+      }
+    }
+  }
+
+  /**
+   * Generate comment form
+   */
+  function comment_on_top_generate_comment_form
+  ($commentedEntityTypeId, $commentedEntityId, $fieldName, $commentTypeId) {
+    $values = [
+      'entity_type' => $commentedEntityTypeId,
+      'entity_id' => $commentedEntityId,
+      'field_name' => $fieldName,
+      'comment_type' => $commentTypeId,
+      'pid' => NULL,
+    ];
+    $comment = \Drupal::entityTypeManager()
+      ->getStorage('comment')
+      ->create($values);
+    return \Drupal::service('entity.form_builder')->getForm($comment);
+  }
+
+  /**
+   * Implements hook_uninstall().
+   */
+  function comment_on_top_uninstall($is_syncing) {
+    Drupal::configFactory()->getEditable('views.view.comments_with_one_sticked_on_top')->delete();
+    Drupal::configFactory()->getEditable('field.storage.comment.field_stick_comment_on_top_boole')->delete();
+    Drupal::configFactory()->getEditable('field.field.comment.comment.field_stick_comment_on_top_boole')->delete();
+  }
+
+  /**
+   * Implements hook_help().
+   */
+  function comment_on_top_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+    switch ($route_name) {
+      case 'help.page.comment_on_top':
+        $output = '';
+        $output .= '<h3>' .t('About') . '</h3>';
+
+        $output .= '<p>' . t('The Comment on top module enables users to pin their preferred comment in a node to the top, where it will be displayed alongside its replies.') . '</p>';
+        $output .= '<p>' . t('Module works on Drupal 10, 9, and 8.') . '</p>';
+        $output .= '<p>' . t('It has been successfully tested on Drupal 10.2.2, 9.5.11, and 8.9.20.') . '</p>';
+        $output .= '<p>' . t('Version 2 is available now!') . '</p>';
+        $output .= '<p>' . t('Now more liked comment can be automatically sticked on top.') . '</p>';
+        $output .= '<p>' . t('Only first tier comment can be sticked on top. Replies/threads cannot be sticked on top, such comments always go with its parent comment.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<h3>' .t('Requirements') . '</h3>';
+        $output .= '<p>' . t('The module is based on the Views block, which means that the default query display comments must be disabled.') . '</p>';
+        $output .= '<p>' . t('If you use submodule Comment on top by likes, you need contribute module <a href="https://www.drupal.org/project/like_dislike" target="_blank">Like/Dislike</a>  ') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<h3>' .t('Installation') . '</h3>';
+        $output .= '<p>' . t('Install as you would normally install a contributed Drupal module.') . '</p>';
+        $output .= '<p>' . t('If you want the most liked comment to be sticked to the top, there is a submodule called \'Comment on Top by Likes\', which also needs to be enabled.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<h3>' .t('Configuration') . '</h3>';
+        $output .= '<p>' . t('COMMENT ON TOP module:') . '</p>';
+        $output .= '<p>' . t('Standard core dependencies are Comment, Text, Field, Filter, User, System and Node.') . '</p>';
+        $output .= '<p>' . t('So you need to follow the steps below. Or take a look this video:') . '</p>';
+        $output .= '<p> <a href="https://www.youtube.com/watch?v=_ffaI9N5B8U" target="_blank">Drupal module Comment on top, installing, configuring and uninstalling</a> </p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('After module installation, you\'ll get a new View block called "Comments with one sticked on top".') . '</p>';
+        $output .= '<p>' . t('So you need to put it in the right place:') . '</p>';
+        $output .= '<p>' . t('- Go to /admin/structure/block and in region "Content" click on the "Place block" button.') . '</p>';
+        $output .= '<p>' . t('- Select block "Comments with one sticked on top", uncheck "Display title" and save it.') . '</p>';
+        $output .= '<p>' . t('- If block is not placed under "Main page content", use drag\'n\'drop to move it under.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('The next step is to disable the default query comment display, otherwise, you\'ll have doubled comments:') . '</p>';
+        $output .= '<p>' . t('- Go to EVERY Content type where you have the Comment type field here /admin/structure/types/ In this case, it will be an Article content type.') . '</p>';
+        $output .= '<p>' . t('- Click on Article "Manage fields" and go to the tab "Manage display".') . '</p>';
+        $output .= '<p>' . t('- Use drag\'n\'drop to move the "Comments" field under where the "Disabled" fields are, and save it.') . '</p>';
+        $output .= '<p>' . t('- Repeat the last three steps for EVERY content type where you have Comments.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('Using module:') . '</p>';
+        $output .= '<p>' . t('- Finally, go to the node where you have comments, for example /node/1. If you are logged in as a user who has the role to Stick comment on top, you will now get the "Stick on top" button under every comment that is not a reply.') . '</p>';
+        $output .= '<p>' . t('- When you click on "Stick on top" on a favorite comment, page will refresh, and that comment with its replies will be on top.') . '</p>';
+        $output .= '<p>' . t('- If you want to change your favorite comment for that node, what will be on top, just click the below comment "Stick on top", and it will replace the current Comment on top.') . '</p>';
+        $output .= '<p>' . t('- If you want default sorting, just click on the top comment "Remove from top".') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('COMMENT ON TOP BY LIKES submodule:') . '</p>';
+        $output .= '<p>' . t('This module doesn\'t have special configuration. Firstly, you need to install and configure Like/Dislike module.') . '</p>';
+        $output .= '<p>' . t('That means adding field_like_dislike in <a href="/admin/structure/comment/manage/comment/fields" target="_blank">Comment fields</a> .') . '</p>';
+        $output .= '<p>' . t('That gives Like and Dislike buttons on every comment.') . '</p>';
+        $output .= '<p>' . t('The submodule Comment on top by likes calculates the most liked comment by subtracting dislikes from likes and sticks it to top.') . '</p>';
+        $output .= '<p>' . t('There are two ways to select nodes where most liked comment will be sticked on top:') . '</p>';
+        $output .= '<p>' . t('- Checkbox "Stick on top by likes" in node create/edit form under Comment settings;') . '</p>';
+        $output .= '<p>' . t('- In  <a href="/admin/config/system/content-type-comment-on-top-by-likes-settings" target="_blank">Content type comment on top by likes settings</a> you can choose content types where all nodes will have comments sticked on top by likes;') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<h3>' .t('Uninstallation') . '</h3>';
+        $output .= '<p>' . t('COMMENT ON TOP module:') . '</p>';
+        $output .= '<p>' . t('To uninstall Comment on top module and return all to default, please follow the below steps.') . '</p>';
+        $output .= '<p>' . t('Or take a look at the video from this time:') . '</p>';
+        $output .= '<p> <a href="https://youtu.be/_ffaI9N5B8U?t=293" target="_blank">Drupal module Comment on top, installing, configuring and uninstalling</a> </p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('Remove block "Comments with one sticked on top"') . '</p>';
+        $output .= '<p>' . t('-  Go to  <a href="/admin/structure/block/" target="_blank">Block</a> and under the "Content" region, there is a "Comments with one sticked on top" block.') . '</p>';
+        $output .= '<p>' . t('- Click on the down arrow near Configure on that block and click "Remove". Confirm the removal in the pop-up window.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('Remove the Stick on top field from Comment type:') . '</p>';
+        $output .= '<p>' . t('-  Go to  <a href="/admin/structure/comment/" target="_blank">Comment</a> and click on "Manage fields".') . '</p>';
+        $output .= '<p>' . t('- On "Stick on top" field, click on the down the arrow near Edit and click on Delete.') . '</p>';
+        $output .= '<p>' . t('- Confirm deletion in the pop-up window.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('Uninstall Comment on top module:') . '</p>';
+        $output .= '<p>' . t('-  Go to  <a href="/admin/modules/uninstall" target="_blank">Uninstall</a> to uninstall the module.') . '</p>';
+        $output .= '<p>' . t('- From all modules, check "Comment on top" and click the Uninstall button. Confirm it on the next screen.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('Returning the default query, displaying comments:') . '</p>';
+        $output .= '<p>' . t('- Go to EVERY Content type where you disabled the Comment type field  <a href="/admin/structure/types/" target="_blank">here</a> .') . '</p>';
+        $output .= '<p>' . t('- For example, click on Article "Manage fields" and go to the tab "Manage display".') . '</p>';
+        $output .= '<p>' . t('- Use drag\'n\'drop to move the "Comments" field above the "Disabled" fields to enable it and save it.') . '</p>';
+        $output .= '<p>' . t('- Repeat last three steps for EVERY content type where you have Comments.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('COMMENT ON TOP BY LIKES submodule:') . '</p>';
+        $output .= '<p>' . t('Uninstall it as every other module. Go to <a href="/admin/modules/uninstall" target="_blank">Uninstall</a>  to uninstall the module.') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+        $output .= '<p>' . t('<br>') . '</p>';
+
+        return $output;
+
+      default:
+    }
+  }

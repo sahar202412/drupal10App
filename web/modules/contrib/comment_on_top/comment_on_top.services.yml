@@ -1,0 +1,8 @@
+services:
+  comment_on_top.service:
+    class: Drupal\comment_on_top\CommentOnTopService
+    arguments: ['@entity_type.manager', '@messenger', '@comment_on_top_by_likes.node']
+
+  comment_on_top_by_likes.node:
+    class: Drupal\comment_on_top\CommentOnTopByLikesPerNode
+    arguments: ['@database']

@@ -1,0 +1,6 @@
+comment_on_top_by_likes.content_type_comment_on_top_by_likes_settings:
+  title: Comment on top settings
+  description: Choose content types where more liked comment in node will be pined on top before all other comments
+  parent: system.admin_config_system
+  route_name: comment_on_top_by_likes.content_type_comment_on_top_by_likes_settings
+  weight: 10

@@ -1,0 +1,4 @@
+administer comment on top:
+  title: 'Administer Comment on Top'
+  description: 'Allows users to administer Comment on Top functionality.'
+  restrict access: true

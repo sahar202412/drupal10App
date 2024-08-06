@@ -1,0 +1,15 @@
+comment_on_top_by_likes.content_type_comment_on_top_by_likes_settings:
+  path: '/admin/config/system/content-type-comment-on-top-by-likes-settings'
+  defaults:
+    _title: 'Content type comment on top by likes settings'
+    _form: 'Drupal\comment_on_top_by_likes\Form\ContentTypeCommentOnTopByLikesSettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
+
+comment_on_top_by_likes.content_type_comment_by_likes_confirm:
+  path: '/admin/config/system/content-type-comment-by-likes-confirm'
+  defaults:
+    _title: 'Content Type Comment By Likes Confirm'
+    _form: 'Drupal\comment_on_top_by_likes\Form\ContentTypeCommentByLikesConfirmForm'
+  requirements:
+    _permission: 'administer site configuration'

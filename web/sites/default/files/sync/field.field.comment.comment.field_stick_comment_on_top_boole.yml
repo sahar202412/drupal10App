@@ -1,0 +1,25 @@
+uuid: 9e41e065-2195-4880-b7bd-5e8c4ee65201
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+    - field.storage.comment.field_stick_comment_on_top_boole
+_core:
+  default_config_hash: J3mG1xDGT_glviGg6SVEjJ5UD_SUZjrZ7YuA1F5kOYM
+id: comment.comment.field_stick_comment_on_top_boole
+field_name: field_stick_comment_on_top_boole
+entity_type: comment
+bundle: comment
+label: 'Stick comment on top boolean'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

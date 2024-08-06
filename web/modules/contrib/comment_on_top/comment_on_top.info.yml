@@ -1,0 +1,15 @@
+name: 'Comment on top'
+type: module
+description: 'Stick the comment at the top before all other comments'
+package: Commenting
+core_version_requirement: ^8.8 || ^9 || ^10
+dependencies:
+  - drupal:comment
+  - drupal:node
+  - drupal:views
+# version: '2.0.1'
+
+# Information added by Drupal.org packaging script on 2024-04-08
+version: '2.0.3'
+project: 'comment_on_top'
+datestamp: 1712575092

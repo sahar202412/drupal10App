@@ -1,0 +1,21 @@
+uuid: a0bf70ac-03e4-4998-8058-c3c200e224c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_created_at
+    - node.type.category
+  module:
+    - datetime
+id: node.category.field_created_at
+field_name: field_created_at
+entity_type: node
+bundle: category
+label: 'created_at '
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

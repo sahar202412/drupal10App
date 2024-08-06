@@ -1,0 +1,15 @@
+comment_on_top.remove:
+  path: '/comment/remove/node/{node_id}/comment/{comment_id}'
+  defaults:
+    _controller: '\Drupal\comment_on_top\Controller\CommentOnTopController::removeFromTop'
+  requirements:
+    _permission: 'administer comment on top'
+
+comment_on_top.add:
+  path: '/comment/add/node/{node_id}/comment/{comment_id}'
+  defaults:
+    _controller: '\Drupal\comment_on_top\Controller\CommentOnTopController::stickOnTop'
+  requirements:
+    _permission: 'administer comment on top'
+
+

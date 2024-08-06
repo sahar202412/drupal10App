@@ -1,0 +1,4 @@
+services:
+  comment_on_top_by_likes.most_liked_comment_in_node:
+    class: Drupal\comment_on_top_by_likes\CommentOnTopByLikesMostLikedCommentInNode
+    arguments: ['@database']

@@ -1,0 +1,9 @@
+uuid: 721bc2ca-9112-49fc-a506-55787e236117
+langcode: en
+status: true
+dependencies: {  }
+name: Etiquette
+vid: etiquette
+description: null
+weight: 0
+new_revision: false

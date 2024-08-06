@@ -1,0 +1,17 @@
+name: 'Comment on top by likes'
+type: module
+description: 'Stick most liked comment at the top before all other comments'
+package: Commenting
+core_version_requirement: ^8.8 || ^9 || ^10
+dependencies:
+  - drupal:comment
+  - drupal:node
+  - drupal:views
+  - like_dislike:like_dislike
+  - comment_on_top:comment_on_top
+# version: '1.0.0'
+
+# Information added by Drupal.org packaging script on 2024-04-08
+version: '2.0.3'
+project: 'comment_on_top'
+datestamp: 1712575092
