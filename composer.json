@@ -17,6 +17,8 @@
     "require": {
         "composer/installers": "^2.0",
         "drupal/admin_toolbar": "^3.5",
+        "drupal/bootstrap": "^3.31",
+        "drupal/bootstrap5": "^4.0",
         "drupal/comment_on_top": "^2.0",
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",

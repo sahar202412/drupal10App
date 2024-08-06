@@ -4,13 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.node.category.body
-    - field.field.node.category.field_created_at
     - field.field.node.category.field_images
     - field.field.node.category.field_phone
     - image.style.thumbnail
     - node.type.category
   module:
-    - datetime
     - image
     - path
     - text
@@ -32,12 +30,6 @@ content:
   created:
     type: datetime_timestamp
     weight: 10
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_created_at:
-    type: datetime_default
-    weight: 123
     region: content
     settings: {  }
     third_party_settings: {  }

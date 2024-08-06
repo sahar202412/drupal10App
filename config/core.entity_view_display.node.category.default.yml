@@ -4,12 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.category.body
-    - field.field.node.category.field_created_at
     - field.field.node.category.field_images
     - field.field.node.category.field_phone
     - node.type.category
   module:
-    - datetime
     - image
     - text
     - user
@@ -24,15 +22,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 101
-    region: content
-  field_created_at:
-    type: datetime_default
-    label: above
-    settings:
-      timezone_override: ''
-      format_type: medium
-    third_party_settings: {  }
-    weight: 103
     region: content
   field_images:
     type: image
