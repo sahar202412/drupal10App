@@ -1,0 +1,32 @@
+uuid: ed4c41a2-d777-415a-893c-320795811002
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.groupe.body
+    - field.field.node.groupe.field_users_group
+    - node.type.groupe
+  module:
+    - text
+    - user
+id: node.groupe.teaser
+targetEntityType: node
+bundle: groupe
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_users_group: true

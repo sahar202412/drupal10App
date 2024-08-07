@@ -1,20 +1,22 @@
-uuid: bd679f6d-eb3f-4849-8f4e-8f3acd576360
+uuid: 62c7f128-7796-46a1-a754-16cb678629fd
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_brand
-    - field.storage.node.field_images
-    - field.storage.node.field_rating
-    - image.style.thumbnail
-    - node.type.review
-    - system.menu.main
+    - field.storage.node.field_imagess
+    - field.storage.node.field_price
+    - image.style.medium
+    - node.type.products
+    - user.role.administrator
+    - user.role.anonymous
+    - user.role.authenticated
+    - user.role.content_editor
   module:
     - image
     - node
     - user
-id: reviews
-label: Reviews
+id: products2
+label: products
 module: views
 description: ''
 tag: ''
@@ -27,7 +29,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: Reviews
+      title: Classiques
       fields:
         title:
           id: title
@@ -39,22 +41,40 @@ display:
           entity_type: node
           entity_field: title
           plugin_id: field
-          label: Title
+          label: ''
           exclude: false
           alter:
             alter_text: false
+            text: ''
             make_link: false
+            path: ''
             absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
             word_boundary: false
             ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
             strip_tags: false
             trim: false
+            preserve_tags: ''
             html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -76,15 +96,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_brand:
-          id: field_brand
-          table: node__field_brand
-          field: field_brand
+        field_imagess:
+          id: field_imagess
+          table: node__field_imagess
+          field: field_imagess
           relationship: none
           group_type: group
           admin_label: ''
           plugin_id: field
-          label: Brand
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -117,133 +137,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: basic_string
-          settings: {  }
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_rating:
-          id: field_rating
-          table: node__field_rating
-          field: field_rating
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Rating
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: number_integer
-          settings:
-            thousand_separator: ''
-            prefix_suffix: true
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-        field_images:
-          id: field_images
-          table: node__field_images
-          field: field_images
-          relationship: none
-          group_type: group
-          admin_label: ''
-          plugin_id: field
-          label: Image
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -255,7 +149,7 @@ display:
           type: image
           settings:
             image_link: ''
-            image_style: thumbnail
+            image_style: medium
             image_loading:
               attribute: lazy
           group_column: ''
@@ -268,16 +162,15 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        delete_node:
-          id: delete_node
-          table: node
-          field: delete_node
+        field_price:
+          id: field_price
+          table: node__field_price
+          field: field_price
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: node
-          plugin_id: entity_link_delete
-          label: 'Link to delete Content'
+          plugin_id: field
+          label: ''
           exclude: false
           alter:
             alter_text: false
@@ -310,7 +203,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -318,15 +211,29 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: delete
-          output_url_as_text: false
-          absolute: false
+          click_sort_column: value
+          type: number_decimal
+          settings:
+            thousand_separator: ''
+            decimal_separator: .
+            scale: 2
+            prefix_suffix: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
       pager:
         type: mini
         options:
           offset: 0
           pagination_heading_level: h4
-          items_per_page: 3
+          items_per_page: 10
           total_pages: null
           id: 0
           tags:
@@ -351,9 +258,13 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: perm
+        type: role
         options:
-          perm: 'access content'
+          role:
+            anonymous: anonymous
+            authenticated: authenticated
+            content_editor: content_editor
+            administrator: administrator
       cache:
         type: tag
         options: {  }
@@ -396,56 +307,69 @@ display:
           entity_field: type
           plugin_id: bundle
           value:
-            review: review
+            products: products
+        field_price_value:
+          id: field_price_value
+          table: node__field_price
+          field: field_price_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: numeric
+          operator: '='
+          value:
+            min: ''
+            max: ''
+            value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: field_price_value_op
+            label: 'Price (field_price)'
+            description: ''
+            use_operator: false
+            operator: field_price_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_price_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              administrator: '0'
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       style:
-        type: table
+        type: grid_responsive
         options:
           grouping: {  }
-          row_class: ''
-          default_row_class: true
-          columns:
-            title: title
-            field_brand: field_brand
-            field_rating: field_rating
-            field_images: field_images
-          default: '-1'
-          info:
-            title:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_brand:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_rating:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_images:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          override: true
-          sticky: false
-          summary: ''
-          empty_table: false
-          caption: ''
-          description: ''
+          columns: 4
+          cell_min_width: 100
+          grid_gutter: 10
+          alignment: horizontal
       row:
         type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       query:
         type: views_query
         options:
@@ -463,13 +387,13 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
-        - 'config:field.storage.node.field_brand'
-        - 'config:field.storage.node.field_images'
-        - 'config:field.storage.node.field_rating'
+        - 'config:field.storage.node.field_imagess'
+        - 'config:field.storage.node.field_price'
   page_1:
     id: page_1
     display_title: Page
@@ -477,12 +401,12 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: reviews
+      path: classiques
       menu:
-        type: normal
-        title: Reviews
+        type: none
+        title: ''
         description: ''
-        weight: -48
+        weight: 0
         expanded: false
         menu_name: main
         parent: ''
@@ -492,10 +416,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - 'user.node_grants:view'
-        - user.permissions
+        - user.roles
       tags:
-        - 'config:field.storage.node.field_brand'
-        - 'config:field.storage.node.field_images'
-        - 'config:field.storage.node.field_rating'
+        - 'config:field.storage.node.field_imagess'
+        - 'config:field.storage.node.field_price'
