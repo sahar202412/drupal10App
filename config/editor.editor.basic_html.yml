@@ -28,7 +28,16 @@ settings:
       - code
       - '|'
       - sourceEditing
+      - undo
+      - alignment
+      - insertTable
   plugins:
+    ckeditor5_alignment:
+      enabled_alignments:
+        - center
+        - justify
+        - left
+        - right
     ckeditor5_heading:
       enabled_headings:
         - heading2

@@ -1,0 +1,35 @@
+uuid: a1d23652-994a-495e-83de-82c7b2252409
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.welcome
+    - field.field.block_content.welcome.body
+    - field.field.block_content.welcome.field_images
+  module:
+    - image
+    - text
+id: block_content.welcome.default
+targetEntityType: block_content
+bundle: welcome
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_images:
+    type: image
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden: {  }

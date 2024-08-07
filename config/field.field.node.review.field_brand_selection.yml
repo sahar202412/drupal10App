@@ -1,0 +1,29 @@
+uuid: 02d9557c-f892-48c6-8ae4-567ca2ac3157
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_brand_selection
+    - node.type.review
+    - taxonomy.vocabulary.brand
+id: node.review.field_brand_selection
+field_name: field_brand_selection
+entity_type: node
+bundle: review
+label: 'Brand (Sélection)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      brand: brand
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

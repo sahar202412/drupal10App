@@ -1,0 +1,9 @@
+uuid: 4b8da68c-6c58-4d0e-8ac7-02c6a63ca0a1
+langcode: en
+status: true
+dependencies: {  }
+name: Brand
+vid: brand
+description: 'Brand of guitars '
+weight: 0
+new_revision: false

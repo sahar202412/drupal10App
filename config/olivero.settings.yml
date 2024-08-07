@@ -1,6 +1,8 @@
 _core:
   default_config_hash: 1TswGK46jyu77aIM7Z-0JVQs5bxHmo-gtgrvrQGMXxc
 favicon:
+  mimetype: image/jpeg
+  path: 'public://imagess_3.jpg'
   use_default: true
 features:
   comment_user_picture: true
@@ -8,10 +10,11 @@ features:
   favicon: true
   node_user_picture: false
 logo:
+  path: 'public://360_F_331316104_5Ggg8aZkuUHIZ1w7eGUS34o1zKbejUAf.jpg'
   use_default: false
 third_party_settings:
   shortcut:
     module_link: true
 mobile_menu_all_widths: 0
-site_branding_bg_color: default
-base_primary_color: '#1b9ae4'
+site_branding_bg_color: white
+base_primary_color: '#35758f'

@@ -1,0 +1,31 @@
+name: 'YG Music'
+type: theme
+description: 'YG Music is a theme template perfect for music related websites'
+core_version_requirement: ^9 || ^10
+base theme: classy
+screenshot: yg_music.png
+
+regions:
+  logo: 'logo'
+  navigation: 'Navigation'
+  primary_menu: 'primary_menu'
+  header: 'Top Bar'
+  highlighted: 'Highlighted'
+  slider: 'slider'
+  title: 'title'
+  content: 'Content'
+  sidebar_first: 'Primary'
+  sidebar_second: 'Secondary'
+  contact: 'contact'
+  map: 'map'
+  footer: 'footer'
+
+
+libraries:
+  - yg_music/global-css 
+  - yg_music/global-js
+
+# Information added by Drupal.org packaging script on 2024-05-07
+version: '2.0.1'
+project: 'yg_music'
+datestamp: 1715074019

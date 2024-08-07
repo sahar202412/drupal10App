@@ -1,0 +1,19 @@
+uuid: 09faf4c1-0868-404b-9b0c-0e96e40c917e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_model
+    - node.type.review
+id: node.review.field_model
+field_name: field_model
+entity_type: node
+bundle: review
+label: Model
+description: 'The model of the guitar being reviewed.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

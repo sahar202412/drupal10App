@@ -1,0 +1,8 @@
+uuid: ec43e0f5-3047-4e61-b5d7-37ca74be209e
+langcode: en
+status: true
+dependencies: {  }
+id: language-switcher
+label: 'Language switcher'
+description: ''
+locked: false

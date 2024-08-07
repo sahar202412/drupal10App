@@ -1,0 +1,8 @@
+uuid: a78aa000-96b4-4031-9493-d50db0a4923d
+langcode: en
+status: true
+dependencies: {  }
+id: bloc_imag
+label: 'Bloc image'
+revision: false
+description: null

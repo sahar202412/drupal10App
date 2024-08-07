@@ -1,0 +1,8 @@
+uuid: 8f953a80-f528-4797-ad47-2f6e02c1908e
+langcode: en
+status: true
+dependencies: {  }
+id: welcome
+label: Welcome
+revision: false
+description: null

@@ -1,0 +1,19 @@
+uuid: fa9a5755-edf1-409e-b41b-d3bd58d2bd7a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_brand
+field_name: field_brand
+entity_type: node
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
