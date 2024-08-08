@@ -40,6 +40,7 @@ regions:
   sidebar_first: 'Sidebar first'
   sidebar_second: 'Sidebar second'
   footer: Footer
+  new_regision :  'Nouvelle region'
 
 # Information added by Drupal.org packaging script on 2024-06-09
 version: '4.0.2'

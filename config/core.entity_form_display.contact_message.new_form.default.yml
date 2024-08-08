@@ -1,0 +1,64 @@
+uuid: eca6ca45-811f-4ad9-b599-7d7f9c23b242
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.new_form
+    - field.field.contact_message.new_form.field_date_contact
+  module:
+    - datetime
+id: contact_message.new_form.default
+targetEntityType: contact_message
+bundle: new_form
+mode: default
+content:
+  copy:
+    weight: 50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_date_contact:
+    type: datetime_default
+    weight: 51
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  mail:
+    weight: -40
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  message:
+    type: string_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 12
+      placeholder: ''
+    third_party_settings: {  }
+  name:
+    weight: -50
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  preview:
+    weight: 40
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  subject:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

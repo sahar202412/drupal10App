@@ -1,0 +1,12 @@
+uuid: 4700427e-ff31-4d15-b1b7-a82782b7c644
+langcode: en
+status: true
+dependencies: {  }
+id: new_form
+label: 'new form'
+recipients:
+  - s.moussa@mat-it.com
+reply: ''
+weight: 0
+message: ''
+redirect: ''

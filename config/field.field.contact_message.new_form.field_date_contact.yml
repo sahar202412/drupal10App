@@ -1,0 +1,21 @@
+uuid: daffc2c1-bb88-4bcd-b4bc-4ecc1f5cc800
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.new_form
+    - field.storage.contact_message.field_date_contact
+  module:
+    - datetime
+id: contact_message.new_form.field_date_contact
+field_name: field_date_contact
+entity_type: contact_message
+bundle: new_form
+label: 'date contact'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

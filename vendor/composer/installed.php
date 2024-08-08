@@ -3,7 +3,7 @@
         'name' => 'drupal/recommended-project',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'bd61024a27e1f403cafbabb109de7d728279053a',
+        'reference' => 'a73011c84dfbde3b5c2987be11a7242f77e83b0c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -379,6 +379,15 @@
                 0 => '10.3.1',
             ),
         ),
+        'drupal/forum' => array(
+            'pretty_version' => '1.0.2',
+            'version' => '1.0.2.0',
+            'reference' => '1.0.2',
+            'type' => 'drupal-module',
+            'install_path' => __DIR__ . '/../../web/modules/contrib/forum',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'drupal/jquery_ui' => array(
             'pretty_version' => '1.7.0',
             'version' => '1.7.0.0',
@@ -418,7 +427,7 @@
         'drupal/recommended-project' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'bd61024a27e1f403cafbabb109de7d728279053a',
+            'reference' => 'a73011c84dfbde3b5c2987be11a7242f77e83b0c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

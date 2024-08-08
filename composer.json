@@ -23,6 +23,7 @@
         "drupal/core-composer-scaffold": "^10.3",
         "drupal/core-project-message": "^10.3",
         "drupal/core-recommended": "^10.3",
+        "drupal/forum": "^1.0",
         "drupal/radix": "^5.0",
         "drupal/tara": "^11.0",
         "drupal/yg_music": "^2.0",

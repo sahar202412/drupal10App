@@ -1,0 +1,21 @@
+uuid: c4ce7a17-3abf-4b54-a491-2eb86bf45bcd
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.feedback
+    - field.storage.contact_message.field_remember
+id: contact_message.feedback.field_remember
+field_name: field_remember
+entity_type: contact_message
+bundle: feedback
+label: Remember
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

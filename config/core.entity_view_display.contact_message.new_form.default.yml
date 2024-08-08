@@ -1,0 +1,33 @@
+uuid: 36ef89c8-3417-488a-a067-2421e316be17
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.new_form
+    - field.field.contact_message.new_form.field_date_contact
+  module:
+    - datetime
+id: contact_message.new_form.default
+targetEntityType: contact_message
+bundle: new_form
+mode: default
+content:
+  field_date_contact:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  message:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  langcode: true
