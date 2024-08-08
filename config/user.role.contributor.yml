@@ -1,0 +1,21 @@
+uuid: d2306f2e-ac4b-4ed2-91d3-a6f50a2f8fd4
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+    - filter.format.restricted_html
+  module:
+    - comment
+    - filter
+id: contributor
+label: contributor
+weight: 4
+is_admin: null
+permissions:
+  - 'administer comment types'
+  - 'administer comments'
+  - 'administer filters'
+  - 'edit own comments'
+  - 'use text format full_html'
+  - 'use text format restricted_html'
