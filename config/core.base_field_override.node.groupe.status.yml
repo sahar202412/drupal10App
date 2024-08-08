@@ -1,0 +1,22 @@
+uuid: 419a2677-eccb-4a8f-99ca-1425ff2d3dc6
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.groupe
+id: node.groupe.status
+field_name: status
+entity_type: node
+bundle: groupe
+label: Published
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

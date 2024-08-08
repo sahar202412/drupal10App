@@ -12,7 +12,7 @@ bundle: review
 label: Brand
 description: 'The brand of the guitar being reviewed '
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }

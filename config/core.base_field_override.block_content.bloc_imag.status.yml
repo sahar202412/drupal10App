@@ -1,0 +1,22 @@
+uuid: e3042830-d151-4bcb-96a9-ea50b725a064
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.bloc_imag
+id: block_content.bloc_imag.status
+field_name: status
+entity_type: block_content
+bundle: bloc_imag
+label: Published
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

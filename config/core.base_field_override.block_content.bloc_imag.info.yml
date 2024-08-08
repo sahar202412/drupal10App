@@ -1,0 +1,18 @@
+uuid: edc0f41f-62c9-4528-bab1-a9ab3045cf2f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.bloc_imag
+id: block_content.bloc_imag.info
+field_name: info
+entity_type: block_content
+bundle: bloc_imag
+label: 'Block description'
+description: 'A brief description of your block.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

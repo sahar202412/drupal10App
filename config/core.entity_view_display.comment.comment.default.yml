@@ -27,3 +27,4 @@ content:
     region: content
 hidden:
   field_stick_comment_on_top_boole: true
+  langcode: true

@@ -40,3 +40,4 @@ hidden:
   field_model: true
   field_rating: true
   field_test: true
+  langcode: true

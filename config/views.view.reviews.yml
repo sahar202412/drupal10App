@@ -470,6 +470,43 @@ display:
         - 'config:field.storage.node.field_brand'
         - 'config:field.storage.node.field_images'
         - 'config:field.storage.node.field_rating'
+  feed_1:
+    id: feed_1
+    display_title: Feed
+    display_plugin: feed
+    position: 2
+    display_options:
+      title: Reviews
+      style:
+        type: rss
+        options:
+          uses_fields: false
+          description: 'A blog that rants about RSS'
+      row:
+        type: node_rss
+        options:
+          relationship: none
+          view_mode: default
+      defaults:
+        title: false
+        sitename_title: false
+      display_extenders: {  }
+      path: reviews/feed
+      sitename_title: true
+      displays:
+        page_1: page_1
+        default: '0'
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags:
+        - 'config:field.storage.node.field_brand'
+        - 'config:field.storage.node.field_images'
+        - 'config:field.storage.node.field_rating'
   page_1:
     id: page_1
     display_title: Page

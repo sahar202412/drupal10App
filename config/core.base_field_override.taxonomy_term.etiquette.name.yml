@@ -1,0 +1,18 @@
+uuid: 5f345b7e-e519-4627-b8df-466d5ed56ab9
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.etiquette
+id: taxonomy_term.etiquette.name
+field_name: name
+entity_type: taxonomy_term
+bundle: etiquette
+label: Name
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

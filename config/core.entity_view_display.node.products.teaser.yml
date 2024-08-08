@@ -34,3 +34,4 @@ hidden:
   field_imagess: true
   field_price: true
   field_title: true
+  langcode: true

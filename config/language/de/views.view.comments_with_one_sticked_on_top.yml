@@ -1,0 +1,32 @@
+display:
+  default:
+    display_title: Standard
+    display_options:
+      fields:
+        name:
+          separator: ', '
+        entity_id:
+          separator: ', '
+        subject:
+          separator: ', '
+        comment_body:
+          separator: ', '
+        delete_comment:
+          text: Löschen
+        edit_comment:
+          text: Bearbeiten
+        created:
+          separator: ', '
+      exposed_form:
+        options:
+          submit_button: Anwenden
+          reset_button_label: Zurücksetzen
+          exposed_sorts_label: Sortierung
+          sort_asc_label: Aufsteigend
+          sort_desc_label: Absteigend
+      arguments:
+        nid:
+          exception:
+            title: Alle
+  bcsot:
+    display_title: Block

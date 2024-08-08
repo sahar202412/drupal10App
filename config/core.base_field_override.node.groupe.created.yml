@@ -1,0 +1,18 @@
+uuid: e1bffa64-0aac-420c-bfde-8c5292b69427
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.groupe
+id: node.groupe.created
+field_name: created
+entity_type: node
+bundle: groupe
+label: 'Authored on'
+description: 'The date and time that the content was created.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

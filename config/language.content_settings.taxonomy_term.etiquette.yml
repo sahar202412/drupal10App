@@ -1,0 +1,18 @@
+uuid: 4c0a1047-ab5a-400f-b620-d822b7a266e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.etiquette
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: false
+    bundle_settings:
+      untranslatable_fields_hide: '0'
+id: taxonomy_term.etiquette
+target_entity_type_id: taxonomy_term
+target_bundle: etiquette
+default_langcode: site_default
+language_alterable: false

@@ -12,7 +12,7 @@ bundle: review
 label: Rating
 description: 'The subjective rating of the guitar being reviewed'
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
